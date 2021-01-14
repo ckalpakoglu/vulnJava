@@ -1,0 +1,3 @@
+
+compile: java -Djavax.xml.accessExternalDTD=all  XmlToObject
+

@@ -1,0 +1,30 @@
+rules:
+- id: jaxb-xee
+  metadata:
+    cwe: 'CWE-611'
+    owasp: 'A5: XXE'
+  patterns:
+  - pattern-either: 
+    - pattern: |
+      JAXBContext $JC = $JAXBContext.newInstance($CLASS);
+      ...
+      Unmarshaller $JU = $JC.createUnmarshaller();
+
+  - pattern-not-inside: |
+      $RETURNTYPE $METHOD(...) {
+        ...
+        SAXParserFactory $DBF = SAXParserFactory.newInstance();
+        $DBF.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        ...
+      }     
+  message: |
+    Generic XXE in JAXBContext
+  languages: [java]
+  severity: ERROR
+
+
+
+  ##SAXParserFactory spf = SAXParserFactory.newInstance();
+  ##spf.setFeature("http://xml.org/sax/features/external-general-entities", false);
+  ##spf.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+  ##spf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
